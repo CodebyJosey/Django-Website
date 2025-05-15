@@ -1,0 +1,28 @@
+{% load static %}
+
+<div class="menu">
+    <div class="menu-top">
+        <img class="logo" src="{% static "base/img/plaatje.png" %}" alt="Logo">
+        <h1 class="title">Boekenclub De Geletterde Kat</h1>
+    </div>
+    <div class="menu-bottom">
+        {% if user.is_authenticated %}
+            <seperator>
+            <a class="link" href="{% url 'index' %}">Home</a>
+            <a class="link" href="{% url 'ratings' %}">Beoordelingen</a>
+            <a class="link" href="{% url 'books' %}">Boeken</a>
+            {% if user.is_staff %}
+                <a class="link" href="{% url 'unapproved_books' %}">Ongekeurde Boeken</a>
+            {% endif %}
+            <a href="{% url 'logout_user' %}" class="link">Uitloggen</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="link">Inloggen</a>
+            <a href="{% url 'register' %}" class="link">Registreren</a>
+        {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'user_profile' %}">
+            <img src="{% static 'base/img/profile.png' %}" alt="Profile" class="profile">
+        </a>
+    {% endif %}
+</div>

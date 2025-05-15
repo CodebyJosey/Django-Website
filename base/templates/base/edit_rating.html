@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <div class="add-form">
+        <h2>Beoordeling bewerken:</h2>
+        <form method="POST">
+            {% csrf_token %}
+        
+            <p>
+                <label for="id_book">Boek:</label>
+                <select name="book" id="id_book">
+                    {% for book in form.book.field.queryset %}
+                        <option value="{{ book.id }}" {% if book.id == form.instance.book.id %}selected{% endif %}>
+                            {{ book.title }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </p>
+        
+            <p>
+                <label for="id_date">Datum:</label>
+                <input type="datetime-local" name="date" id="id_date" value="{{ form.instance.date|date:'Y-m-d\TH:i' }}">
+            </p>
+        
+            <p>
+                <label for="id_score">Score:</label>
+                <input type="number" name="score" id="id_score" min="1" max="10" value="{{ form.instance.score }}">
+            </p>
+        
+            <div class="buttons">
+                <input type="submit" value="Opslaan" class="submit">
+                {% if edit %}
+                    <input type="submit" name="delete" value="Verwijder" class="submit">
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

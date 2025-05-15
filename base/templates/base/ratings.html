@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Alle Beoordelingen</h1> <br>
+<a class="link2" href="{% url 'readform' %}">Voeg een beoordeling toe</a>
+
+{% for rating in ratings %}
+    <div class="rating-comment">
+        <div class="rating-meta">
+            <a class="link3" href="{% url 'profile' rating.user.username %}">{{rating.user.username}}</a> - {{ rating.date }}
+            {% if user.is_staff %}
+                <form action="{% url 'delete_rating' rating.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-button">
+                        <img src="{% static "base/img/trashcan.png" %}" alt="Verwijder">
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="rating-book">
+            <a class="link3" href="{% url 'book' rating.book.title %}">{{rating.book.title}}</a>
+            Auteur: <strong>{{ rating.book.author }}</strong><br>
+            Genre: <strong>{{ rating.book.genre }}</strong><br>
+            Pagina's: <strong>{{ rating.book.number_of_pages }}</strong>
+        </div>
+        <div class="rating-stars">
+            {% for star in rating.star_images %}
+                <img src="{% static 'base/img/star-'|add:star|add:'.png' %}" alt="{{ star }} star" class="star">
+            {% endfor %}
+        </div>
+    </div>
+{% empty %}
+    <p><strong>Er zijn op dit moment geen beoordelingen.</strong></p>
+{% endfor %}
+{% endblock content %}

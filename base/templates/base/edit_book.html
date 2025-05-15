@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <div class="add-form">
+        <h2>Boek bewerken: {{ book.title }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+        
+            <p>
+                <label for="id_title">Titel:</label>
+                <input type="text" name="title" id="id_title" value="{{ form.instance.title }}">
+            </p>
+        
+            <p>
+                <label for="id_author">Auteur:</label>
+                <input type="text" name="author" id="id_author" value="{{ form.instance.author }}">
+            </p>
+        
+            <p>
+                <label for="id_genre">Genre:</label>
+                <input type="text" name="genre" id="id_genre" value="{{ form.instance.genre }}">
+            </p>
+        
+            <p>
+                <label for="id_number_of_pages">Aantal Pagina's:</label>
+                <input type="number" name="number_of_pages" id="id_number_of_pages" value="{{ form.instance.number_of_pages }}">
+            </p>
+        
+            <div class="buttons">
+                <input type="submit" value="Opslaan" class="submit">
+                {% if edit and user.is_staff %}
+                    <input type="submit" name="delete" value="Verwijder" class="submit">
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

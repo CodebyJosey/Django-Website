@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Alle Boeken</h1> <br>
+<a class="link2" href="{% url 'bookform' %}">Voeg een boek toe</a>
+
+{% for book in books %}
+    <div class="rating-comment">
+        <div class="rating-meta">
+            <a class="link3" href="{% url 'book' book.title %}">{{book.title}}</a>
+            {% if user.is_staff %}
+                <form action="{% url 'edit_book' book.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-button">
+                        <img src="{% static "base/img/edit.png" %}" alt="Verwijder">
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="rating-book<">
+            Boek: <strong>{{ book.title }}</strong><br>
+            Auteur: <strong>{{ book.author }}</strong><br>
+            Genre: <strong>{{ book.genre }}</strong><br>
+            Pagina's: <strong>{{ book.number_of_pages }}</strong>
+        </div>
+    </div>
+{% empty %}
+    <p><strong>Er zijn op dit moment geen goedgekeurde boeken.</strong></p>
+{% endfor %}
+{% endblock content %}

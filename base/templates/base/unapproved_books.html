@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Ongekeurde Boeken</h1> <br>
+{% for book in books %}
+    <div class="rating-comment">
+        <div class="rating-meta">
+            <strong>Er is een nieuw boek voorgesteld:</strong>
+            {% if user.is_staff %}
+                <div class="admin-buttons">
+                    <form action="{% url 'approve_book' book.pk %}" method="POST" class="accept">
+                        {% csrf_token %}
+                        <button type="submit" class="approve-button">
+                            <img src="{% static "base/img/accept.png" %}" alt="Accepteer">
+                        </button>
+                    </form>
+                    <form action="{% url 'deny_book' book.pk %}" method="POST" class="deny">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">
+                            <img src="{% static "base/img/deny.png" %}" alt="Negeer">
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+        <div class="rating-book<">
+            Boek: <strong>{{ book.title }}</strong><br>
+            Auteur: <strong>{{ book.author }}</strong><br>
+            Genre: <strong>{{ book.genre }}</strong><br>
+            Pagina's: <strong>{{ book.number_of_pages }}</strong>
+        </div>
+    </div>
+{% empty %}
+    <p><strong>Er zijn op dit moment geen goedgekeurde boeken.</strong></p>
+{% endfor %}
+{% endblock content %}

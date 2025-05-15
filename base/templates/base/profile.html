@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% if edit %}
+    <div class="profile-form">
+        <h2>Profile</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" class="submit">
+        </form>
+    </div>
+{% else %}
+    <div class="profile-wrapper">
+        <h2>Profile</h2>
+        <div class="profile-data">
+            Username: <strong>{{ profile.user }}</strong><br>
+            Date of Birth: <strong>{{ profile.date_of_birth }}</strong><br>
+            Woonplaats: <strong>{{ profile.city }}</strong><br>
+            {% if profile.biotext %}
+                Bio: <strong>{{ profile.biotext }}</strong><br>
+            {% else %}
+                Bio: <em>No bio provided.</em><br>
+            {% endif %}
+        </div>
+        {% if user == profile.user %}
+            <a class="link2" href="{% url 'edit_profile' %}">Edit Profile</a>
+            <a class="link2" href="{% url 'change_password' %}">Change Password</a>
+        {% endif %}
+    <div>
+
+    {% for rating in ratings %}
+        <div class="rating-comment">
+            <div class="rating-meta">
+                <strong>{{rating.user.username}}</strong> - {{ rating.date }}
+                {% if user.is_staff %}
+                    <div class="admin-buttons">
+                        <form action="{% url 'edit_rating' rating.id %}" method="POST" class="accept">
+                            {% csrf_token %}
+                            <button type="submit" class="approve-button">
+                                <img src="{% static "base/img/edit.png" %}" alt="Accepteer">
+                            </button>
+                        </form>
+                        <form action="{% url 'delete_rating' rating.id %}" method="POST" class="deny">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">
+                                <img src="{% static "base/img/trashcan.png" %}" alt="Negeer">
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="rating-book">
+                <a class="link3" href="{% url 'book' rating.book.title %}">{{rating.book.title}}</a>
+                Auteur: <strong>{{ rating.book.author }}</strong><br>
+                Genre: <strong>{{ rating.book.genre }}</strong><br>
+                Pagina's: <strong>{{ rating.book.number_of_pages }}</strong>
+            </div>
+            <div class="rating-stars">
+                {% for star in rating.star_images %}
+                    <img src="{% static 'base/img/star-'|add:star|add:'.png' %}" alt="{{ star }} star" class="star">
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p><strong>U heeft nog geen beoordelingen.</strong></p>
+    {% endfor %}
+{% endif %}
+{% endblock content %}
